@@ -1,0 +1,2341 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#8B7E74">
+    <title>Boomer Træningsapp</title>
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQm9vbWVyIFRyw6ZuaW5nc2FwcCIsInNob3J0X25hbWUiOiJCb29tZXIiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI0Y1RjFFRCIsInRoZW1lX2NvbG9yIjoiIzhCN0U3NCIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSGRwWkhSb1BTSXhPVElpSUdobGFXZG9kRDBpTVRreUlqNDhjbVZqZENCM2FXUjBhRDBpTVRreUlpQm9aV2xuYUhROUlqRTVNaUlnWm1sc2JEMGlJemc0TnpFMk5DSXZQanh3WVhSb0lHUTlJazB4TURZZ05UWkRNVEEySURZeExqSTFJRGt4TGpJMUlEWTJJRGMySURZMmN6TXdJRFF1TnpVZ016QWdNVEJETVRJd0xqYzFJRFkySURFeU5pQTJNUzR5TlNBeE1qWWdOVFpUTVRJd0xqYzFJRFEySURFd05pQTBOaUlnYzNSeWIydGxQU0ozYUdsMFpTSWdjM1J5YjJ0bExYZHBaSFJvUFNJeUlpQm1hV3hzUFNKdWIyNWxJaTgrUEM5emRtYysiLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --chalk-cream: #F5F1ED;
+            --chalk-beige: #E8E0D5;
+            --chalk-tan: #D4C4B0;
+            --chalk-brown: #B8A99A;
+            --chalk-dark: #8B7E74;
+            --chalk-darker: #6B5E54;
+            --accent-rust: #C17C5E;
+            --accent-sage: #9CAF88;
+            --shadow: rgba(107, 94, 84, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--chalk-cream) 0%, var(--chalk-beige) 100%);
+            min-height: 100vh;
+            color: var(--chalk-darker);
+            padding-bottom: 80px;
+        }
+
+        .header {
+            background: var(--chalk-dark);
+            color: var(--chalk-cream);
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .tab-navigation {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+            overflow-x: auto;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1 1 auto;
+            min-width: fit-content;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--chalk-darker);
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: var(--chalk-dark);
+            color: var(--chalk-cream);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: var(--chalk-beige);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .card-header {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--chalk-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--chalk-beige);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            color: var(--chalk-darker);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--chalk-tan);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background: var(--chalk-cream);
+            color: var(--chalk-darker);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--chalk-dark);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--chalk-dark);
+            color: var(--chalk-cream);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--chalk-darker);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--chalk-tan);
+            color: var(--chalk-darker);
+        }
+
+        .btn-secondary:hover {
+            background: var(--chalk-brown);
+        }
+
+        .btn-success {
+            background: var(--accent-sage);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--accent-rust);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .interval-inputs {
+            background: var(--chalk-beige);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .exercise-item {
+            background: var(--chalk-cream);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--chalk-dark);
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .exercise-name {
+            font-weight: 600;
+            color: var(--chalk-dark);
+        }
+
+        .round-badge {
+            background: var(--chalk-dark);
+            color: var(--chalk-cream);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+        }
+
+        .session-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .session-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 8px var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid var(--chalk-dark);
+        }
+
+        .session-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px var(--shadow);
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.75rem;
+        }
+
+        .session-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--chalk-dark);
+        }
+
+        .session-date {
+            color: var(--chalk-brown);
+            font-size: 0.875rem;
+        }
+
+        .session-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .type-cardio {
+            background: #E8F4F8;
+            color: #2C5F7C;
+        }
+
+        .type-weight {
+            background: #F8E8E8;
+            color: #7C2C2C;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--chalk-dark);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--chalk-brown);
+            margin-top: 0.25rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--chalk-dark);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--chalk-brown);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--chalk-brown);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-btn {
+                font-size: 0.875rem;
+                padding: 0.625rem 0.75rem;
+            }
+
+            .tab-navigation {
+                gap: 0.35rem;
+            }
+        }
+
+        .add-exercise-btn {
+            margin-top: 1rem;
+        }
+
+        .circuit-list {
+            margin-bottom: 1.5rem;
+        }
+
+        .circuit-item {
+            background: var(--chalk-beige);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background: var(--accent-rust);
+            color: white;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: end;
+        }
+
+        .input-group .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .settings-section {
+            margin-bottom: 2rem;
+        }
+
+        .settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--chalk-cream);
+            border-radius: 8px;
+        }
+
+        .record-card {
+            background: var(--chalk-cream);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--chalk-dark);
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .record-machine {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--chalk-dark);
+        }
+
+        .record-badge {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .record-badge.sb {
+            background: linear-gradient(135deg, #C0C0C0, #808080);
+        }
+
+        .record-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .record-stat {
+            text-align: center;
+        }
+
+        .record-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--chalk-dark);
+        }
+
+        .record-label {
+            font-size: 0.875rem;
+            color: var(--chalk-brown);
+            margin-top: 0.25rem;
+        }
+
+        .improvement {
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .previous-record {
+            background: var(--chalk-beige);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--chalk-darker);
+        }
+
+        .record-date {
+            color: var(--chalk-brown);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💪 Boomer Træningsapp</h1>
+    </div>
+
+    <div class="container">
+        <div class="tab-navigation">
+            <button class="tab-btn active" onclick="switchTab('new-session')">Ny Session</button>
+            <button class="tab-btn" onclick="switchTab('history')">Historik</button>
+            <button class="tab-btn" onclick="switchTab('records')">PB/SB</button>
+            <button class="tab-btn" onclick="switchTab('circuits')">Runder</button>
+            <button class="tab-btn" onclick="switchTab('routines')">Rutiner</button>
+            <button class="tab-btn" onclick="switchTab('settings')">Indstillinger</button>
+            <button class="tab-btn" onclick="switchTab('export')">Eksport</button>
+        </div>
+
+        <!-- New Session Tab -->
+        <div id="new-session" class="tab-content active">
+            <div class="card">
+                <div class="card-header">Ny Træningssession</div>
+                
+                <div class="form-group">
+                    <label>Type træning</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="includeCardio" onchange="toggleTrainingTypes()" checked>
+                        <label for="includeCardio" style="margin-bottom: 0;">Cardio</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="includeWeight" onchange="toggleTrainingTypes()">
+                        <label for="includeWeight" style="margin-bottom: 0;">Vægt</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Session navn</label>
+                    <input type="text" id="sessionName">
+                </div>
+
+                <div class="form-group">
+                    <label>Dato</label>
+                    <input type="date" id="sessionDate">
+                </div>
+
+                <!-- Cardio Form -->
+                <div id="cardioForm">
+                    <div class="form-group">
+                        <label>Maskine</label>
+                        <select id="cardioMachine"></select>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Distance (meter)</label>
+                            <input type="number" id="cardioDistance">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tid (tt:mm:ss,0)</label>
+                            <input type="text" id="cardioTime">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Kalorier</label>
+                            <input type="number" id="cardioCalories">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Watt</label>
+                            <input type="number" id="cardioWatt">
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="isPersonalBest">
+                        <label for="isPersonalBest" style="margin-bottom: 0;">🏆 Personlig Bedste (PB)</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="isSeasonBest">
+                        <label for="isSeasonBest" style="margin-bottom: 0;">⭐ Sæson Bedste (SB)</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="isInterval" onchange="toggleInterval()">
+                        <label for="isInterval" style="margin-bottom: 0;">Interval træning</label>
+                    </div>
+
+                    <div id="intervalInputs" class="interval-inputs" style="display: none;">
+                        <div class="form-group">
+                            <label>Interval type</label>
+                            <select id="intervalType">
+                                <option value="time">Tid</option>
+                                <option value="distance">Distance</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Pause mellem intervaller</label>
+                            <input type="text" id="intervalPause">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weight Form -->
+                <div id="weightForm" style="display: none;">
+                    <div class="form-group">
+                        <label>Vælg runde (valgfrit)</label>
+                        <div style="display: flex; gap: 0.5rem; align-items: end;">
+                            <div style="flex: 1;">
+                                <select id="circuitSelect" onchange="loadCircuit()">
+                                    <option value="">-- Ingen runde --</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-secondary btn-small" onclick="openNewCircuitModal()" style="white-space: nowrap;">
+                                + Ny runde
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="exercisesList"></div>
+
+                    <button class="btn btn-secondary add-exercise-btn" onclick="addExercise()">+ Tilføj øvelse</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Noter (valgfrit)</label>
+                    <textarea id="sessionNotes"></textarea>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveSession()">💾 Gem Session</button>
+            </div>
+        </div>
+
+        <!-- History Tab -->
+        <div id="history" class="tab-content">
+            <div class="card">
+                <div class="card-header">Træningshistorik</div>
+                <div id="sessionsList"></div>
+            </div>
+        </div>
+
+        <!-- PB/SB Records Tab -->
+        <div id="records" class="tab-content">
+            <div class="card">
+                <div class="card-header">🏆 Personlige Bedste (PB)</div>
+                <div id="personalBests"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">⭐ Sæson Bedste (SB)</div>
+                <p style="margin-bottom: 1rem; color: var(--chalk-brown);">
+                    En sæson defineres som indeværende kalenderår.
+                </p>
+                <div id="seasonBests"></div>
+            </div>
+        </div>
+
+        <!-- Circuits Tab -->
+        <div id="circuits" class="tab-content">
+            <div class="card">
+                <div class="card-header">Mine Runder</div>
+                
+                <div class="form-group">
+                    <label>Runde navn</label>
+                    <input type="text" id="newCircuitName">
+                </div>
+
+                <div id="circuitExercises"></div>
+
+                <button class="btn btn-secondary" onclick="addCircuitExercise()">+ Tilføj øvelse til runde</button>
+                <button class="btn btn-primary" onclick="saveCircuit()" style="margin-top: 1rem;">💾 Gem Runde</button>
+
+                <div class="card-header" style="margin-top: 2rem;">Gemte Runder</div>
+                <div id="savedCircuits"></div>
+            </div>
+        </div>
+
+        <!-- Routines Tab -->
+        <div id="routines" class="tab-content">
+            <div class="card">
+                <div class="card-header">Mine Rutiner</div>
+                <p style="margin-bottom: 1.5rem; color: var(--chalk-brown);">
+                    En rutine er en fast sekvens af øvelser der altid udføres sammen (f.eks. core-rutine, warm-up, osv.)
+                </p>
+                
+                <div class="form-group">
+                    <label>Rutine navn</label>
+                    <input type="text" id="newRoutineName">
+                </div>
+
+                <div id="routineSteps"></div>
+
+                <button class="btn btn-secondary" onclick="addRoutineStep()">+ Tilføj trin til rutine</button>
+                <button class="btn btn-primary" onclick="saveRoutine()" style="margin-top: 1rem;">💾 Gem Rutine</button>
+
+                <div class="card-header" style="margin-top: 2rem;">Gemte Rutiner</div>
+                <div id="savedRoutines"></div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="card">
+                <div class="card-header">Cardio Maskiner</div>
+                <div class="settings-section">
+                    <div class="settings-list" id="cardioMachinesList"></div>
+                    <div class="input-group" style="margin-top: 1rem;">
+                        <div class="form-group">
+                            <input type="text" id="newCardioMachine">
+                        </div>
+                        <button class="btn btn-success btn-small" onclick="addCardioMachine()">Tilføj</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Vægt Øvelser</div>
+                <div class="settings-section">
+                    <div class="settings-list" id="weightExercisesList"></div>
+                    <div class="input-group" style="margin-top: 1rem;">
+                        <div class="form-group">
+                            <input type="text" id="newWeightExercise">
+                        </div>
+                        <button class="btn btn-success btn-small" onclick="addWeightExercise()">Tilføj</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Tab -->
+        <div id="export" class="tab-content">
+            <div class="card">
+                <div class="card-header">📊 Datastørrelse</div>
+                <div id="dataSize" class="stats-grid" style="margin-bottom: 2rem;"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">📥 Eksporter Data</div>
+                <p style="margin-bottom: 1.5rem; color: var(--chalk-brown);">
+                    Download dine træningsdata i forskellige formater. Perfekt til backup eller analyse i Excel.
+                </p>
+
+                <div style="display: grid; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="exportJSON()">
+                        💾 Eksporter som JSON
+                    </button>
+                    <button class="btn btn-primary" onclick="exportCSV()">
+                        📊 Eksporter som CSV (Excel)
+                    </button>
+                    <button class="btn btn-primary" onclick="exportExcel()">
+                        📗 Eksporter som Excel (XLSX)
+                    </button>
+                </div>
+
+                <div style="margin-top: 2rem; padding: 1rem; background: var(--chalk-beige); border-radius: 8px;">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--chalk-dark);">Om formaterne:</h4>
+                    <ul style="margin-left: 1.5rem; color: var(--chalk-darker);">
+                        <li><strong>JSON:</strong> Komplet backup af alle data (kan importeres igen)</li>
+                        <li><strong>CSV:</strong> Kan åbnes i Excel, Google Sheets osv.</li>
+                        <li><strong>XLSX:</strong> Native Excel format med formatering og flere ark</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">📤 Importer Data</div>
+                <p style="margin-bottom: 1rem; color: var(--chalk-brown);">
+                    Gendan data fra en tidligere JSON backup.
+                </p>
+                <input type="file" id="importFile" accept=".json" style="margin-bottom: 1rem;">
+                <button class="btn btn-secondary" onclick="importJSON()">
+                    📤 Importer JSON
+                </button>
+                <div style="margin-top: 1rem; padding: 1rem; background: #FFF3CD; border-radius: 8px; color: #856404;">
+                    <strong>⚠️ Advarsel:</strong> Import vil overskrive eksisterende data. Eksporter først en backup!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Session Detail Modal -->
+    <div id="sessionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody"></div>
+            <button class="btn btn-danger" onclick="deleteSession()" style="margin-top: 1rem;">🗑️ Slet Session</button>
+        </div>
+    </div>
+
+    <!-- New Circuit Modal -->
+    <div id="newCircuitModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Opret Ny Runde</h2>
+                <button class="close-btn" onclick="closeNewCircuitModal()">&times;</button>
+            </div>
+            <div>
+                <div class="form-group">
+                    <label>Runde navn</label>
+                    <input type="text" id="modalCircuitName">
+                </div>
+
+                <div id="modalCircuitExercises"></div>
+
+                <button class="btn btn-secondary" onclick="addModalCircuitExercise()">+ Tilføj øvelse</button>
+                <button class="btn btn-primary" onclick="saveModalCircuit()" style="margin-top: 1rem;">💾 Gem og Brug Runde</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default data
+        const defaultCardioMachines = ['Skiergometer', 'Romaskine', 'Wattbike'];
+        const defaultWeightExercises = ['Bænkpres', 'Skrå bænkpres', 'Skulderpres', 'Push-ups', 'Lateral pulldown', 'Mavebøjninger', 'Planke'];
+
+        // Initialize app
+        let sessions = JSON.parse(localStorage.getItem('sessions')) || [];
+        let circuits = JSON.parse(localStorage.getItem('circuits')) || [];
+        let routines = JSON.parse(localStorage.getItem('routines')) || [];
+        let cardioMachines = JSON.parse(localStorage.getItem('cardioMachines')) || defaultCardioMachines;
+        let weightExercises = JSON.parse(localStorage.getItem('weightExercises')) || defaultWeightExercises;
+        let exerciseCounter = 0;
+        let currentSessionId = null;
+        let routineStepCounter = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('sessionDate').valueAsDate = new Date();
+            updateCardioMachinesDropdown();
+            updateWeightExercisesLists();
+            renderSessions();
+            renderCircuits();
+            renderSettings();
+        });
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'history') {
+                renderSessions();
+            } else if (tabName === 'records') {
+                renderRecords();
+            } else if (tabName === 'circuits') {
+                renderCircuits();
+            } else if (tabName === 'routines') {
+                renderRoutines();
+            } else if (tabName === 'settings') {
+                renderSettings();
+            } else if (tabName === 'export') {
+                calculateDataSize();
+            }
+        }
+
+        function toggleTrainingTypes() {
+            const includeCardio = document.getElementById('includeCardio').checked;
+            const includeWeight = document.getElementById('includeWeight').checked;
+            
+            document.getElementById('cardioForm').style.display = includeCardio ? 'block' : 'none';
+            document.getElementById('weightForm').style.display = includeWeight ? 'block' : 'none';
+        }
+
+        function toggleInterval() {
+            const isInterval = document.getElementById('isInterval').checked;
+            document.getElementById('intervalInputs').style.display = isInterval ? 'block' : 'none';
+        }
+
+        function addExercise() {
+            exerciseCounter++;
+            const container = document.getElementById('exercisesList');
+            const exerciseDiv = document.createElement('div');
+            exerciseDiv.className = 'exercise-item';
+            exerciseDiv.id = `exercise-${exerciseCounter}`;
+            
+            exerciseDiv.innerHTML = `
+                <div class="exercise-header">
+                    <span class="exercise-name">Øvelse ${exerciseCounter}</span>
+                    <button class="delete-btn" onclick="removeExercise(${exerciseCounter})">Slet</button>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select class="exercise-item-type" onchange="toggleExerciseType(${exerciseCounter})">
+                        <option value="single">Enkelt øvelse</option>
+                        <option value="routine">Rutine</option>
+                    </select>
+                </div>
+                <div class="single-exercise-fields">
+                    <div class="form-group">
+                        <label>Øvelse</label>
+                        <select class="exercise-type"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Runde nummer</label>
+                        <input type="number" class="exercise-round" value="1" min="1">
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="weight-label">Vægt (kg)</label>
+                            <input type="number" class="exercise-weight">
+                        </div>
+                        <div class="form-group">
+                            <label class="reps-label">Gentagelser</label>
+                            <input type="number" class="exercise-reps">
+                        </div>
+                    </div>
+                </div>
+                <div class="routine-fields" style="display: none;">
+                    <div class="form-group">
+                        <label>Vælg rutine</label>
+                        <select class="routine-select"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Runde nummer</label>
+                        <input type="number" class="routine-round" value="1" min="1">
+                    </div>
+                    <div class="routine-preview" style="background: var(--chalk-beige); padding: 0.75rem; border-radius: 8px; margin-top: 0.5rem;"></div>
+                </div>
+            `;
+            
+            container.appendChild(exerciseDiv);
+            
+            // Populate exercise dropdown
+            const select = exerciseDiv.querySelector('.exercise-type');
+            weightExercises.forEach(ex => {
+                const option = document.createElement('option');
+                option.value = ex;
+                option.textContent = ex;
+                select.appendChild(option);
+            });
+            
+            // Populate routine dropdown
+            updateRoutineDropdowns();
+            
+            // Update labels based on exercise type
+            select.addEventListener('change', function() {
+                updateExerciseLabels(exerciseDiv, this.value);
+            });
+            
+            // Add routine preview update
+            const routineSelect = exerciseDiv.querySelector('.routine-select');
+            routineSelect.addEventListener('change', function() {
+                updateRoutinePreview(exerciseCounter);
+            });
+            
+            updateExerciseLabels(exerciseDiv, select.value);
+        }
+
+        function toggleExerciseType(exerciseId) {
+            const exerciseDiv = document.getElementById(`exercise-${exerciseId}`);
+            const type = exerciseDiv.querySelector('.exercise-item-type').value;
+            
+            if (type === 'single') {
+                exerciseDiv.querySelector('.single-exercise-fields').style.display = 'block';
+                exerciseDiv.querySelector('.routine-fields').style.display = 'none';
+            } else {
+                exerciseDiv.querySelector('.single-exercise-fields').style.display = 'none';
+                exerciseDiv.querySelector('.routine-fields').style.display = 'block';
+                updateRoutinePreview(exerciseId);
+            }
+        }
+
+        function updateRoutinePreview(exerciseId) {
+            const exerciseDiv = document.getElementById(`exercise-${exerciseId}`);
+            const routineSelect = exerciseDiv.querySelector('.routine-select');
+            const previewDiv = exerciseDiv.querySelector('.routine-preview');
+            
+            if (!routineSelect.value) {
+                previewDiv.innerHTML = '';
+                return;
+            }
+            
+            const routineId = parseInt(routineSelect.value);
+            const routine = routines.find(r => r.id === routineId);
+            
+            if (!routine) {
+                previewDiv.innerHTML = '';
+                return;
+            }
+            
+            let html = '<strong>Rutine indhold:</strong><br>';
+            routine.steps.forEach((step, idx) => {
+                html += `<small>${idx + 1}. ${step.name}`;
+                if (step.weight) html += ` - ${step.weight}kg`;
+                if (step.reps) html += ` × ${step.reps}`;
+                if (step.duration) html += ` - ${step.duration} sek`;
+                if (step.distance) html += ` - ${step.distance}m`;
+                if (step.watt) html += ` - ${step.watt}W`;
+                html += '</small><br>';
+            });
+            
+            previewDiv.innerHTML = html;
+        }
+
+        function updateExerciseLabels(exerciseDiv, exerciseType) {
+            const weightLabel = exerciseDiv.querySelector('.weight-label');
+            const repsLabel = exerciseDiv.querySelector('.reps-label');
+            const weightInput = exerciseDiv.querySelector('.exercise-weight');
+            const repsInput = exerciseDiv.querySelector('.exercise-reps');
+            
+            if (exerciseType === 'Planke') {
+                weightLabel.textContent = 'Vægt (kg)';
+                repsLabel.textContent = 'Tid (sekunder)';
+                weightInput.placeholder = '0';
+                repsInput.placeholder = '60';
+            } else if (exerciseType === 'Push-ups' || exerciseType === 'Mavebøjninger') {
+                weightLabel.textContent = 'Vægt (kg)';
+                weightInput.placeholder = '0';
+                repsLabel.textContent = 'Gentagelser';
+                repsInput.placeholder = '20';
+            } else {
+                weightLabel.textContent = 'Vægt (kg)';
+                weightInput.placeholder = '80';
+                repsLabel.textContent = 'Gentagelser';
+                repsInput.placeholder = '10';
+            }
+        }
+
+        function removeExercise(id) {
+            document.getElementById(`exercise-${id}`).remove();
+        }
+
+        function saveSession() {
+            const name = document.getElementById('sessionName').value;
+            const date = document.getElementById('sessionDate').value;
+            const notes = document.getElementById('sessionNotes').value;
+            const includeCardio = document.getElementById('includeCardio').checked;
+            const includeWeight = document.getElementById('includeWeight').checked;
+
+            if (!name || !date) {
+                alert('Indtast venligst navn og dato for sessionen');
+                return;
+            }
+
+            if (!includeCardio && !includeWeight) {
+                alert('Vælg mindst én træningstype (Cardio eller Vægt)');
+                return;
+            }
+
+            const session = {
+                id: Date.now(),
+                name,
+                date,
+                notes,
+                types: []
+            };
+
+            if (includeCardio) {
+                session.types.push('cardio');
+                session.cardio = {
+                    machine: document.getElementById('cardioMachine').value,
+                    distance: document.getElementById('cardioDistance').value,
+                    time: document.getElementById('cardioTime').value,
+                    calories: document.getElementById('cardioCalories').value,
+                    watt: document.getElementById('cardioWatt').value,
+                    isInterval: document.getElementById('isInterval').checked,
+                    intervalType: document.getElementById('intervalType').value,
+                    intervalPause: document.getElementById('intervalPause').value,
+                    isPersonalBest: document.getElementById('isPersonalBest').checked,
+                    isSeasonBest: document.getElementById('isSeasonBest').checked
+                };
+            }
+
+            if (includeWeight) {
+                session.types.push('weight');
+                session.exercises = [];
+                const exerciseItems = document.querySelectorAll('.exercise-item');
+                
+                if (exerciseItems.length === 0) {
+                    alert('Tilføj mindst én øvelse');
+                    return;
+                }
+                
+                exerciseItems.forEach(item => {
+                    const itemType = item.querySelector('.exercise-item-type').value;
+                    
+                    if (itemType === 'single') {
+                        session.exercises.push({
+                            itemType: 'single',
+                            type: item.querySelector('.exercise-type').value,
+                            round: parseInt(item.querySelector('.exercise-round').value),
+                            weight: parseFloat(item.querySelector('.exercise-weight').value) || 0,
+                            reps: parseInt(item.querySelector('.exercise-reps').value) || 0
+                        });
+                    } else if (itemType === 'routine') {
+                        const routineId = parseInt(item.querySelector('.routine-select').value);
+                        const routine = routines.find(r => r.id === routineId);
+                        if (routine) {
+                            session.exercises.push({
+                                itemType: 'routine',
+                                routineId: routineId,
+                                routineName: routine.name,
+                                round: parseInt(item.querySelector('.routine-round').value),
+                                steps: routine.steps
+                            });
+                        }
+                    }
+                });
+            }
+
+            sessions.push(session);
+            localStorage.setItem('sessions', JSON.stringify(sessions));
+
+            alert('Session gemt! 💪');
+            resetForm();
+            switchTab('history');
+        }
+
+        function resetForm() {
+            document.getElementById('sessionName').value = '';
+            document.getElementById('sessionNotes').value = '';
+            document.getElementById('cardioDistance').value = '';
+            document.getElementById('cardioTime').value = '';
+            document.getElementById('cardioCalories').value = '';
+            document.getElementById('cardioWatt').value = '';
+            document.getElementById('isInterval').checked = false;
+            document.getElementById('isPersonalBest').checked = false;
+            document.getElementById('isSeasonBest').checked = false;
+            document.getElementById('intervalInputs').style.display = 'none';
+            document.getElementById('exercisesList').innerHTML = '';
+            document.getElementById('circuitSelect').value = '';
+            document.getElementById('includeCardio').checked = true;
+            document.getElementById('includeWeight').checked = false;
+            toggleTrainingTypes();
+            exerciseCounter = 0;
+        }
+
+        function renderSessions() {
+            const container = document.getElementById('sessionsList');
+            
+            if (sessions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p>Ingen sessioner endnu. Start med at oprette din første træningssession!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group sessions by date
+            const sessionsByDate = {};
+            sessions.forEach(session => {
+                if (!sessionsByDate[session.date]) {
+                    sessionsByDate[session.date] = [];
+                }
+                sessionsByDate[session.date].push(session);
+            });
+
+            // Sort dates descending
+            const sortedDates = Object.keys(sessionsByDate).sort((a, b) => new Date(b) - new Date(a));
+            
+            let html = '';
+            sortedDates.forEach(date => {
+                html += `
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: var(--chalk-dark); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--chalk-tan);">
+                            📅 ${formatDate(date)}
+                        </h3>
+                `;
+                
+                sessionsByDate[date].forEach(session => {
+                    const types = session.types || [session.type];
+                    const typeLabels = types.map(t => t === 'cardio' ? '🏃 Cardio' : '🏋️ Vægt').join(' + ');
+                    
+                    html += `
+                        <div class="session-card" onclick="showSessionDetails(${session.id})" style="margin-bottom: 1rem;">
+                            <div class="session-header">
+                                <div>
+                                    <div class="session-name">${session.name}</div>
+                                </div>
+                                <span class="session-type type-${types[0]}">
+                                    ${typeLabels}
+                                </span>
+                            </div>
+                            ${types.includes('cardio') && session.cardio ? renderCardioPreview(session.cardio) : ''}
+                            ${types.includes('weight') && session.exercises ? renderWeightPreview(session.exercises) : ''}
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function renderCardioPreview(cardio) {
+            return `
+                <div class="stats-grid">
+                    ${cardio.distance ? `<div class="stat-item"><div class="stat-value">${cardio.distance}m</div><div class="stat-label">Distance</div></div>` : ''}
+                    ${cardio.time ? `<div class="stat-item"><div class="stat-value">${cardio.time}</div><div class="stat-label">Tid</div></div>` : ''}
+                    ${cardio.calories ? `<div class="stat-item"><div class="stat-value">${cardio.calories}</div><div class="stat-label">Kalorier</div></div>` : ''}
+                </div>
+            `;
+        }
+
+        function renderWeightPreview(exercises) {
+            const totalExercises = exercises.length;
+            const rounds = Math.max(...exercises.map(e => e.round));
+            return `
+                <div class="stats-grid">
+                    <div class="stat-item"><div class="stat-value">${totalExercises}</div><div class="stat-label">Øvelser</div></div>
+                    <div class="stat-item"><div class="stat-value">${rounds}</div><div class="stat-label">Runder</div></div>
+                </div>
+            `;
+        }
+
+        function showSessionDetails(id) {
+            const session = sessions.find(s => s.id === id);
+            currentSessionId = id;
+            
+            document.getElementById('modalTitle').textContent = session.name;
+            
+            // Handle old format (single type) and new format (types array)
+            const types = session.types || [session.type];
+            const typeLabels = types.map(t => t === 'cardio' ? 'Cardio' : 'Vægt').join(' + ');
+            
+            let detailsHtml = `
+                <p><strong>Dato:</strong> ${formatDate(session.date)}</p>
+                <p><strong>Type:</strong> ${typeLabels}</p>
+            `;
+
+            if (types.includes('cardio') && session.cardio) {
+                const badges = [];
+                if (session.cardio.isPersonalBest) badges.push('<span class="record-badge">🏆 PB</span>');
+                if (session.cardio.isSeasonBest) badges.push('<span class="record-badge sb">⭐ SB</span>');
+                
+                detailsHtml += `
+                    <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--chalk-dark);">
+                        🏃 Cardio Detaljer ${badges.length > 0 ? badges.join(' ') : ''}
+                    </h3>
+                    <p><strong>Maskine:</strong> ${session.cardio.machine}</p>
+                    ${session.cardio.distance ? `<p><strong>Distance:</strong> ${session.cardio.distance} meter</p>` : ''}
+                    ${session.cardio.time ? `<p><strong>Tid:</strong> ${session.cardio.time}</p>` : ''}
+                    ${session.cardio.calories ? `<p><strong>Kalorier:</strong> ${session.cardio.calories}</p>` : ''}
+                    ${session.cardio.watt ? `<p><strong>Watt:</strong> ${session.cardio.watt}</p>` : ''}
+                    ${session.cardio.isInterval ? `
+                        <h4 style="margin-top: 1rem;">Interval Information</h4>
+                        <p><strong>Type:</strong> ${session.cardio.intervalType === 'time' ? 'Tid' : 'Distance'}</p>
+                        <p><strong>Pause:</strong> ${session.cardio.intervalPause}</p>
+                    ` : ''}
+                `;
+            }
+            
+            if (types.includes('weight') && session.exercises) {
+                detailsHtml += `<h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--chalk-dark);">🏋️ Vægt Detaljer</h3>`;
+                
+                const rounds = {};
+                session.exercises.forEach(ex => {
+                    const round = ex.round || 1;
+                    if (!rounds[round]) rounds[round] = [];
+                    rounds[round].push(ex);
+                });
+
+                Object.keys(rounds).sort((a, b) => a - b).forEach(round => {
+                    detailsHtml += `
+                        <h4 style="margin-top: 1rem; margin-bottom: 0.75rem; color: var(--chalk-darker);">Runde ${round}</h4>
+                    `;
+                    rounds[round].forEach(ex => {
+                        if (ex.itemType === 'routine') {
+                            // Display routine
+                            detailsHtml += `
+                                <div class="exercise-item" style="background: var(--chalk-beige);">
+                                    <strong>📋 ${ex.routineName}</strong><br>
+                                    <div style="margin-top: 0.5rem; margin-left: 1rem;">
+                            `;
+                            ex.steps.forEach((step, idx) => {
+                                let stepInfo = `${idx + 1}. ${step.name}`;
+                                if (step.weight) stepInfo += ` - ${step.weight}kg`;
+                                if (step.reps) stepInfo += ` × ${step.reps}`;
+                                if (step.duration) stepInfo += ` - ${step.duration} sek`;
+                                if (step.distance) stepInfo += ` - ${step.distance}m`;
+                                if (step.watt) stepInfo += ` - ${step.watt}W`;
+                                detailsHtml += `<small>${stepInfo}</small><br>`;
+                            });
+                            detailsHtml += `
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            // Display single exercise (handle old format)
+                            const exerciseType = ex.type;
+                            const displayValue = exerciseType === 'Planke' 
+                                ? `${ex.reps} sek` 
+                                : exerciseType === 'Push-ups' || exerciseType === 'Mavebøjninger'
+                                ? `${ex.reps} reps`
+                                : `${ex.weight} kg × ${ex.reps} reps`;
+                            
+                            detailsHtml += `
+                                <div class="exercise-item">
+                                    <strong>${exerciseType}</strong><br>
+                                    ${displayValue}
+                                </div>
+                            `;
+                        }
+                    });
+                });
+            }
+
+            if (session.notes) {
+                detailsHtml += `
+                    <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--chalk-dark);">Noter</h3>
+                    <p style="white-space: pre-wrap;">${session.notes}</p>
+                `;
+            }
+
+            document.getElementById('modalBody').innerHTML = detailsHtml;
+            document.getElementById('sessionModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('sessionModal').classList.remove('active');
+            currentSessionId = null;
+        }
+
+        function deleteSession() {
+            if (confirm('Er du sikker på at du vil slette denne session?')) {
+                sessions = sessions.filter(s => s.id !== currentSessionId);
+                localStorage.setItem('sessions', JSON.stringify(sessions));
+                closeModal();
+                renderSessions();
+            }
+        }
+
+        function renderRecords() {
+            const currentYear = new Date().getFullYear();
+            const pbContainer = document.getElementById('personalBests');
+            const sbContainer = document.getElementById('seasonBests');
+
+            // Get all cardio sessions with records
+            const cardioSessions = sessions.filter(s => {
+                const types = s.types || [s.type];
+                return types.includes('cardio') && s.cardio;
+            });
+
+            // Group by machine
+            const recordsByMachine = {};
+
+            cardioSessions.forEach(session => {
+                const machine = session.cardio.machine;
+                if (!recordsByMachine[machine]) {
+                    recordsByMachine[machine] = {
+                        pb: [],
+                        sb: []
+                    };
+                }
+
+                if (session.cardio.isPersonalBest) {
+                    recordsByMachine[machine].pb.push({
+                        ...session.cardio,
+                        date: session.date,
+                        sessionName: session.name
+                    });
+                }
+
+                if (session.cardio.isSeasonBest && new Date(session.date).getFullYear() === currentYear) {
+                    recordsByMachine[machine].sb.push({
+                        ...session.cardio,
+                        date: session.date,
+                        sessionName: session.name
+                    });
+                }
+            });
+
+            // Render Personal Bests
+            if (Object.keys(recordsByMachine).length === 0) {
+                pbContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🏆</div>
+                        <p>Ingen PB registreret endnu. Markér dine bedste præstationer som PB!</p>
+                    </div>
+                `;
+                sbContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⭐</div>
+                        <p>Ingen SB for ${currentYear} endnu. Markér dine sæson bedste som SB!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let pbHtml = '';
+            let sbHtml = '';
+
+            Object.keys(recordsByMachine).sort().forEach(machine => {
+                const records = recordsByMachine[machine];
+
+                // Render PB
+                if (records.pb.length > 0) {
+                    // Sort by date (newest first) to get current and previous
+                    const sortedPB = records.pb.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    const currentPB = sortedPB[0];
+                    const previousPB = sortedPB[1];
+
+                    pbHtml += renderRecordCard(machine, currentPB, previousPB, 'PB');
+                }
+
+                // Render SB
+                if (records.sb.length > 0) {
+                    const sortedSB = records.sb.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    const currentSB = sortedSB[0];
+                    const previousSB = sortedSB[1];
+
+                    sbHtml += renderRecordCard(machine, currentSB, previousSB, 'SB');
+                }
+            });
+
+            pbContainer.innerHTML = pbHtml || `
+                <div class="empty-state">
+                    <p style="color: var(--chalk-brown);">Ingen PB registreret endnu.</p>
+                </div>
+            `;
+
+            sbContainer.innerHTML = sbHtml || `
+                <div class="empty-state">
+                    <p style="color: var(--chalk-brown);">Ingen SB for ${currentYear} endnu.</p>
+                </div>
+            `;
+        }
+
+        function renderRecordCard(machine, current, previous, type) {
+            const badgeClass = type === 'PB' ? '' : 'sb';
+            const badgeIcon = type === 'PB' ? '🏆' : '⭐';
+
+            let improvementHtml = '';
+            if (previous) {
+                const improvements = [];
+                
+                if (current.distance && previous.distance) {
+                    const diff = parseFloat(current.distance) - parseFloat(previous.distance);
+                    if (diff > 0) {
+                        improvements.push(`+${diff}m distance`);
+                    }
+                }
+                
+                if (current.calories && previous.calories) {
+                    const diff = parseFloat(current.calories) - parseFloat(previous.calories);
+                    if (diff > 0) {
+                        improvements.push(`+${diff} kalorier`);
+                    }
+                }
+
+                if (current.watt && previous.watt) {
+                    const diff = parseFloat(current.watt) - parseFloat(previous.watt);
+                    if (diff > 0) {
+                        improvements.push(`+${diff} watt`);
+                    }
+                }
+
+                if (improvements.length > 0) {
+                    improvementHtml = `
+                        <div class="improvement">
+                            <strong>📈 Forbedring:</strong> ${improvements.join(', ')}
+                        </div>
+                        <div class="previous-record">
+                            <strong>Tidligere ${type}:</strong><br>
+                            ${previous.distance ? `${previous.distance}m` : ''} 
+                            ${previous.time ? `• ${previous.time}` : ''} 
+                            ${previous.calories ? `• ${previous.calories} kcal` : ''} 
+                            ${previous.watt ? `• ${previous.watt}W` : ''}
+                            <br><small>${formatDate(previous.date)}</small>
+                        </div>
+                    `;
+                }
+            }
+
+            return `
+                <div class="record-card">
+                    <div class="record-header">
+                        <div class="record-machine">${machine}</div>
+                        <span class="record-badge ${badgeClass}">${badgeIcon} ${type}</span>
+                    </div>
+                    <div class="record-stats">
+                        ${current.distance ? `
+                            <div class="record-stat">
+                                <div class="record-value">${current.distance}m</div>
+                                <div class="record-label">Distance</div>
+                            </div>
+                        ` : ''}
+                        ${current.time ? `
+                            <div class="record-stat">
+                                <div class="record-value">${current.time}</div>
+                                <div class="record-label">Tid</div>
+                            </div>
+                        ` : ''}
+                        ${current.calories ? `
+                            <div class="record-stat">
+                                <div class="record-value">${current.calories}</div>
+                                <div class="record-label">Kalorier</div>
+                            </div>
+                        ` : ''}
+                        ${current.watt ? `
+                            <div class="record-stat">
+                                <div class="record-value">${current.watt}W</div>
+                                <div class="record-label">Watt</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                    ${improvementHtml}
+                    <div class="record-date">
+                        <strong>${current.sessionName}</strong> • ${formatDate(current.date)}
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString + 'T00:00:00');
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('da-DK', options);
+        }
+
+        // New Circuit Modal functions
+        function openNewCircuitModal() {
+            document.getElementById('newCircuitModal').classList.add('active');
+            document.getElementById('modalCircuitName').value = '';
+            document.getElementById('modalCircuitExercises').innerHTML = '';
+        }
+
+        function closeNewCircuitModal() {
+            document.getElementById('newCircuitModal').classList.remove('active');
+        }
+
+        function addModalCircuitExercise() {
+            const container = document.getElementById('modalCircuitExercises');
+            const div = document.createElement('div');
+            div.className = 'circuit-item';
+            div.innerHTML = `
+                <select class="modal-circuit-exercise-select"></select>
+                <button class="delete-btn" onclick="this.parentElement.remove()">Slet</button>
+            `;
+            
+            const select = div.querySelector('.modal-circuit-exercise-select');
+            weightExercises.forEach(ex => {
+                const option = document.createElement('option');
+                option.value = ex;
+                option.textContent = ex;
+                select.appendChild(option);
+            });
+            
+            container.appendChild(div);
+        }
+
+        function saveModalCircuit() {
+            const name = document.getElementById('modalCircuitName').value;
+            const exerciseSelects = document.querySelectorAll('#modalCircuitExercises .modal-circuit-exercise-select');
+            
+            if (!name) {
+                alert('Indtast venligst et navn til din runde');
+                return;
+            }
+
+            if (exerciseSelects.length === 0) {
+                alert('Tilføj mindst én øvelse til runden');
+                return;
+            }
+
+            const exercises = Array.from(exerciseSelects).map(select => select.value);
+            const newCircuit = { id: Date.now(), name, exercises };
+
+            circuits.push(newCircuit);
+            localStorage.setItem('circuits', JSON.stringify(circuits));
+
+            updateCircuitDropdown();
+            
+            // Select the newly created circuit
+            document.getElementById('circuitSelect').value = newCircuit.id;
+            loadCircuit();
+            
+            closeNewCircuitModal();
+            alert('Runde oprettet og indlæst! 💪');
+        }
+
+        // Export and Import functionality
+        function addCircuitExercise() {
+            const container = document.getElementById('circuitExercises');
+            const div = document.createElement('div');
+            div.className = 'circuit-item';
+            div.innerHTML = `
+                <select class="circuit-exercise-select"></select>
+                <button class="delete-btn" onclick="this.parentElement.remove()">Slet</button>
+            `;
+            
+            const select = div.querySelector('.circuit-exercise-select');
+            weightExercises.forEach(ex => {
+                const option = document.createElement('option');
+                option.value = ex;
+                option.textContent = ex;
+                select.appendChild(option);
+            });
+            
+            container.appendChild(div);
+        }
+
+        function saveCircuit() {
+            const name = document.getElementById('newCircuitName').value;
+            const exerciseSelects = document.querySelectorAll('#circuitExercises .circuit-exercise-select');
+            
+            if (!name) {
+                alert('Indtast venligst et navn til din runde');
+                return;
+            }
+
+            if (exerciseSelects.length === 0) {
+                alert('Tilføj mindst én øvelse til runden');
+                return;
+            }
+
+            const exercises = Array.from(exerciseSelects).map(select => select.value);
+
+            circuits.push({ id: Date.now(), name, exercises });
+            localStorage.setItem('circuits', JSON.stringify(circuits));
+
+            document.getElementById('newCircuitName').value = '';
+            document.getElementById('circuitExercises').innerHTML = '';
+            
+            updateCircuitDropdown();
+            renderCircuits();
+            alert('Runde gemt! 💪');
+        }
+
+        function renderCircuits() {
+            const container = document.getElementById('savedCircuits');
+            
+            if (circuits.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔄</div>
+                        <p>Ingen runder endnu. Opret din første runde for nemt at genbruge øvelser!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = circuits.map(circuit => `
+                <div class="circuit-item">
+                    <div>
+                        <strong>${circuit.name}</strong><br>
+                        <small style="color: var(--chalk-brown);">${circuit.exercises.join(', ')}</small>
+                    </div>
+                    <button class="delete-btn" onclick="deleteCircuit(${circuit.id})">Slet</button>
+                </div>
+            `).join('');
+
+            updateCircuitDropdown();
+        }
+
+        function deleteCircuit(id) {
+            if (confirm('Er du sikker på at du vil slette denne runde?')) {
+                circuits = circuits.filter(c => c.id !== id);
+                localStorage.setItem('circuits', JSON.stringify(circuits));
+                renderCircuits();
+            }
+        }
+
+        function updateCircuitDropdown() {
+            const select = document.getElementById('circuitSelect');
+            select.innerHTML = '<option value="">-- Ingen runde --</option>';
+            
+            circuits.forEach(circuit => {
+                const option = document.createElement('option');
+                option.value = circuit.id;
+                option.textContent = circuit.name;
+                select.appendChild(option);
+            });
+        }
+
+        function loadCircuit() {
+            const circuitId = parseInt(document.getElementById('circuitSelect').value);
+            if (!circuitId) return;
+
+            const circuit = circuits.find(c => c.id === circuitId);
+            if (!circuit) return;
+
+            document.getElementById('exercisesList').innerHTML = '';
+            exerciseCounter = 0;
+
+            circuit.exercises.forEach(exercise => {
+                addExercise();
+                const lastExercise = document.querySelector(`#exercise-${exerciseCounter}`);
+                const select = lastExercise.querySelector('.exercise-type');
+                select.value = exercise;
+                updateExerciseLabels(lastExercise, exercise);
+            });
+        }
+
+        // Routines functionality
+        function addRoutineStep() {
+            routineStepCounter++;
+            const container = document.getElementById('routineSteps');
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'exercise-item';
+            stepDiv.id = `routine-step-${routineStepCounter}`;
+            
+            stepDiv.innerHTML = `
+                <div class="exercise-header">
+                    <span class="exercise-name">Trin ${routineStepCounter}</span>
+                    <button class="delete-btn" onclick="removeRoutineStep(${routineStepCounter})">Slet</button>
+                </div>
+                <div class="form-group">
+                    <label>Øvelse/aktivitet</label>
+                    <input type="text" class="step-name">
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select class="step-type" onchange="updateStepFields(${routineStepCounter})">
+                        <option value="weight">Vægt</option>
+                        <option value="bodyweight">Kropsvægt</option>
+                        <option value="time">Tid (planke, statisk)</option>
+                        <option value="cardio">Cardio-element</option>
+                    </select>
+                </div>
+                <div class="step-fields">
+                    <div class="row">
+                        <div class="form-group weight-field">
+                            <label>Vægt (kg)</label>
+                            <input type="number" class="step-weight">
+                        </div>
+                        <div class="form-group reps-field">
+                            <label>Gentagelser</label>
+                            <input type="number" class="step-reps">
+                        </div>
+                    </div>
+                    <div class="row time-fields" style="display: none;">
+                        <div class="form-group">
+                            <label>Varighed (sekunder)</label>
+                            <input type="number" class="step-duration">
+                        </div>
+                    </div>
+                    <div class="cardio-fields" style="display: none;">
+                        <div class="row">
+                            <div class="form-group">
+                                <label>Distance (meter)</label>
+                                <input type="number" class="step-distance">
+                            </div>
+                            <div class="form-group">
+                                <label>Tid (sek)</label>
+                                <input type="number" class="step-cardio-time">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label>Watt</label>
+                                <input type="number" class="step-watt">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(stepDiv);
+            updateStepFields(routineStepCounter);
+        }
+
+        function removeRoutineStep(id) {
+            document.getElementById(`routine-step-${id}`).remove();
+        }
+
+        function updateStepFields(stepId) {
+            const stepDiv = document.getElementById(`routine-step-${stepId}`);
+            const type = stepDiv.querySelector('.step-type').value;
+            
+            const weightField = stepDiv.querySelector('.weight-field');
+            const repsField = stepDiv.querySelector('.reps-field');
+            const timeFields = stepDiv.querySelector('.time-fields');
+            const cardioFields = stepDiv.querySelector('.cardio-fields');
+            
+            // Hide all first
+            weightField.style.display = 'none';
+            repsField.style.display = 'none';
+            timeFields.style.display = 'none';
+            cardioFields.style.display = 'none';
+            
+            if (type === 'weight') {
+                weightField.style.display = 'block';
+                repsField.style.display = 'block';
+            } else if (type === 'bodyweight') {
+                repsField.style.display = 'block';
+            } else if (type === 'time') {
+                timeFields.style.display = 'block';
+            } else if (type === 'cardio') {
+                cardioFields.style.display = 'block';
+            }
+        }
+
+        function saveRoutine() {
+            const name = document.getElementById('newRoutineName').value;
+            const stepDivs = document.querySelectorAll('#routineSteps .exercise-item');
+            
+            if (!name) {
+                alert('Indtast venligst et navn til din rutine');
+                return;
+            }
+
+            if (stepDivs.length === 0) {
+                alert('Tilføj mindst ét trin til rutinen');
+                return;
+            }
+
+            const steps = [];
+            stepDivs.forEach(stepDiv => {
+                const type = stepDiv.querySelector('.step-type').value;
+                const stepName = stepDiv.querySelector('.step-name').value;
+                
+                if (!stepName) return;
+                
+                const step = { 
+                    name: stepName,
+                    type: type
+                };
+                
+                if (type === 'weight') {
+                    step.weight = parseFloat(stepDiv.querySelector('.step-weight').value) || 0;
+                    step.reps = parseInt(stepDiv.querySelector('.step-reps').value) || 0;
+                } else if (type === 'bodyweight') {
+                    step.reps = parseInt(stepDiv.querySelector('.step-reps').value) || 0;
+                } else if (type === 'time') {
+                    step.duration = parseInt(stepDiv.querySelector('.step-duration').value) || 0;
+                } else if (type === 'cardio') {
+                    step.distance = parseInt(stepDiv.querySelector('.step-distance').value) || 0;
+                    step.duration = parseInt(stepDiv.querySelector('.step-cardio-time').value) || 0;
+                    step.watt = parseInt(stepDiv.querySelector('.step-watt').value) || 0;
+                }
+                
+                steps.push(step);
+            });
+
+            if (steps.length === 0) {
+                alert('Alle trin skal have et navn');
+                return;
+            }
+
+            routines.push({ id: Date.now(), name, steps });
+            localStorage.setItem('routines', JSON.stringify(routines));
+
+            document.getElementById('newRoutineName').value = '';
+            document.getElementById('routineSteps').innerHTML = '';
+            routineStepCounter = 0;
+            
+            updateRoutineDropdowns();
+            renderRoutines();
+            alert('Rutine gemt! 💪');
+        }
+
+        function renderRoutines() {
+            const container = document.getElementById('savedRoutines');
+            
+            if (routines.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p>Ingen rutiner endnu. Opret din første rutine for faste øvelses-sekvenser!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = routines.map(routine => `
+                <div class="circuit-item">
+                    <div>
+                        <strong>${routine.name}</strong><br>
+                        <small style="color: var(--chalk-brown);">${routine.steps.length} trin</small>
+                    </div>
+                    <button class="delete-btn" onclick="deleteRoutine(${routine.id})">Slet</button>
+                </div>
+            `).join('');
+
+            updateRoutineDropdowns();
+        }
+
+        function deleteRoutine(id) {
+            if (confirm('Er du sikker på at du vil slette denne rutine?')) {
+                routines = routines.filter(r => r.id !== id);
+                localStorage.setItem('routines', JSON.stringify(routines));
+                renderRoutines();
+            }
+        }
+
+        function updateRoutineDropdowns() {
+            document.querySelectorAll('.routine-select').forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">-- Vælg rutine --</option>';
+                
+                routines.forEach(routine => {
+                    const option = document.createElement('option');
+                    option.value = routine.id;
+                    option.textContent = routine.name;
+                    select.appendChild(option);
+                });
+                
+                if (currentValue) select.value = currentValue;
+            });
+        }
+
+        // Settings functionality
+        function renderSettings() {
+            renderCardioMachinesList();
+            renderWeightExercisesList();
+        }
+
+        function renderCardioMachinesList() {
+            const container = document.getElementById('cardioMachinesList');
+            container.innerHTML = cardioMachines.map(machine => `
+                <div class="settings-item">
+                    <span>${machine}</span>
+                    <button class="delete-btn" onclick="deleteCardioMachine('${machine}')">Slet</button>
+                </div>
+            `).join('');
+        }
+
+        function renderWeightExercisesList() {
+            const container = document.getElementById('weightExercisesList');
+            container.innerHTML = weightExercises.map(exercise => `
+                <div class="settings-item">
+                    <span>${exercise}</span>
+                    <button class="delete-btn" onclick="deleteWeightExercise('${exercise}')">Slet</button>
+                </div>
+            `).join('');
+        }
+
+        function addCardioMachine() {
+            const input = document.getElementById('newCardioMachine');
+            const machine = input.value.trim();
+            
+            if (!machine) return;
+            if (cardioMachines.includes(machine)) {
+                alert('Denne maskine findes allerede');
+                return;
+            }
+
+            cardioMachines.push(machine);
+            localStorage.setItem('cardioMachines', JSON.stringify(cardioMachines));
+            input.value = '';
+            renderCardioMachinesList();
+            updateCardioMachinesDropdown();
+        }
+
+        function deleteCardioMachine(machine) {
+            if (confirm(`Slet ${machine}?`)) {
+                cardioMachines = cardioMachines.filter(m => m !== machine);
+                localStorage.setItem('cardioMachines', JSON.stringify(cardioMachines));
+                renderCardioMachinesList();
+                updateCardioMachinesDropdown();
+            }
+        }
+
+        function addWeightExercise() {
+            const input = document.getElementById('newWeightExercise');
+            const exercise = input.value.trim();
+            
+            if (!exercise) return;
+            if (weightExercises.includes(exercise)) {
+                alert('Denne øvelse findes allerede');
+                return;
+            }
+
+            weightExercises.push(exercise);
+            localStorage.setItem('weightExercises', JSON.stringify(weightExercises));
+            input.value = '';
+            renderWeightExercisesList();
+            updateWeightExercisesLists();
+        }
+
+        function deleteWeightExercise(exercise) {
+            if (confirm(`Slet ${exercise}?`)) {
+                weightExercises = weightExercises.filter(e => e !== exercise);
+                localStorage.setItem('weightExercises', JSON.stringify(weightExercises));
+                renderWeightExercisesList();
+                updateWeightExercisesLists();
+            }
+        }
+
+        function updateCardioMachinesDropdown() {
+            const select = document.getElementById('cardioMachine');
+            select.innerHTML = cardioMachines.map(machine => 
+                `<option value="${machine}">${machine}</option>`
+            ).join('');
+        }
+
+        function updateWeightExercisesLists() {
+            // Update all exercise dropdowns in current form
+            document.querySelectorAll('.exercise-type').forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = weightExercises.map(ex => 
+                    `<option value="${ex}">${ex}</option>`
+                ).join('');
+                if (currentValue && weightExercises.includes(currentValue)) {
+                    select.value = currentValue;
+                }
+            });
+
+            // Update circuit exercise dropdowns
+            document.querySelectorAll('.circuit-exercise-select').forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = weightExercises.map(ex => 
+                    `<option value="${ex}">${ex}</option>`
+                ).join('');
+                if (currentValue && weightExercises.includes(currentValue)) {
+                    select.value = currentValue;
+                }
+            });
+        }
+
+        // Export and Import functionality
+        function calculateDataSize() {
+            const sessionsJSON = JSON.stringify(sessions);
+            const circuitsJSON = JSON.stringify(circuits);
+            const routinesJSON = JSON.stringify(routines);
+            const machinesJSON = JSON.stringify(cardioMachines);
+            const exercisesJSON = JSON.stringify(weightExercises);
+            
+            const totalBytes = sessionsJSON.length + circuitsJSON.length + routinesJSON.length + machinesJSON.length + exercisesJSON.length;
+            const totalKB = (totalBytes / 1024).toFixed(2);
+            const totalMB = (totalBytes / 1024 / 1024).toFixed(3);
+            
+            const avgSessionSize = sessions.length > 0 ? (sessionsJSON.length / sessions.length).toFixed(0) : 0;
+            const estimated1000 = ((avgSessionSize * 1000) / 1024).toFixed(0);
+            
+            document.getElementById('dataSize').innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-value">${sessions.length}</div>
+                    <div class="stat-label">Sessioner</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${totalKB} KB</div>
+                    <div class="stat-label">Total størrelse</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${avgSessionSize} bytes</div>
+                    <div class="stat-label">Ø per session</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">~${estimated1000} KB</div>
+                    <div class="stat-label">Med 1000 sessioner</div>
+                </div>
+            `;
+        }
+
+        function exportJSON() {
+            const data = {
+                exportDate: new Date().toISOString(),
+                appVersion: '1.0',
+                sessions: sessions,
+                circuits: circuits,
+                routines: routines,
+                cardioMachines: cardioMachines,
+                weightExercises: weightExercises
+            };
+            
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `boomer-traning-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('JSON eksporteret! 📥');
+        }
+
+        function exportCSV() {
+            if (sessions.length === 0) {
+                alert('Ingen data at eksportere');
+                return;
+            }
+
+            // CSV header
+            let csv = 'Dato,Session Navn,Type,Maskine/Øvelse,Distance (m),Tid,Kalorier,Watt,Interval,Vægt (kg),Gentagelser,Runde,Noter\n';
+            
+            sessions.forEach(session => {
+                const types = session.types || [session.type];
+                const baseInfo = `${session.date},"${session.name}",`;
+                
+                if (types.includes('cardio') && session.cardio) {
+                    const c = session.cardio;
+                    const intervalInfo = c.isInterval ? `${c.intervalType} (${c.intervalPause})` : 'Nej';
+                    csv += `${baseInfo}Cardio,"${c.machine}",${c.distance || ''},${c.time || ''},${c.calories || ''},${c.watt || ''},"${intervalInfo}",,,,"${(session.notes || '').replace(/"/g, '""')}"\n`;
+                }
+                
+                if (types.includes('weight') && session.exercises) {
+                    session.exercises.forEach(ex => {
+                        csv += `${baseInfo}Vægt,"${ex.type}",,,,,,${ex.weight},${ex.reps},${ex.round},"${(session.notes || '').replace(/"/g, '""')}"\n`;
+                    });
+                }
+            });
+            
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `boomer-traning-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('CSV eksporteret! 📊 Kan åbnes i Excel.');
+        }
+
+        function exportExcel() {
+            if (sessions.length === 0) {
+                alert('Ingen data at eksportere');
+                return;
+            }
+
+            // Create HTML table for Excel
+            let html = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="utf-8">
+                    <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+                    <x:Name>Træningssessioner</x:Name>
+                    <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>
+                    </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+                    <style>
+                        table { border-collapse: collapse; width: 100%; }
+                        th { background-color: #8B7E74; color: white; font-weight: bold; padding: 8px; border: 1px solid #ddd; }
+                        td { padding: 8px; border: 1px solid #ddd; }
+                        .cardio { background-color: #E8F4F8; }
+                        .weight { background-color: #F8E8E8; }
+                    </style>
+                </head>
+                <body>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dato</th>
+                                <th>Session Navn</th>
+                                <th>Type</th>
+                                <th>Maskine/Øvelse</th>
+                                <th>Distance (m)</th>
+                                <th>Tid</th>
+                                <th>Kalorier</th>
+                                <th>Watt</th>
+                                <th>Interval</th>
+                                <th>Vægt (kg)</th>
+                                <th>Gentagelser</th>
+                                <th>Runde</th>
+                                <th>Noter</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            sessions.forEach(session => {
+                const types = session.types || [session.type];
+                
+                if (types.includes('cardio') && session.cardio) {
+                    const c = session.cardio;
+                    const intervalInfo = c.isInterval ? `${c.intervalType} (${c.intervalPause})` : 'Nej';
+                    html += `
+                        <tr class="cardio">
+                            <td>${session.date}</td>
+                            <td>${session.name}</td>
+                            <td>Cardio</td>
+                            <td>${c.machine}</td>
+                            <td>${c.distance || ''}</td>
+                            <td>${c.time || ''}</td>
+                            <td>${c.calories || ''}</td>
+                            <td>${c.watt || ''}</td>
+                            <td>${intervalInfo}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>${session.notes || ''}</td>
+                        </tr>
+                    `;
+                }
+                
+                if (types.includes('weight') && session.exercises) {
+                    session.exercises.forEach(ex => {
+                        html += `
+                            <tr class="weight">
+                                <td>${session.date}</td>
+                                <td>${session.name}</td>
+                                <td>Vægt</td>
+                                <td>${ex.type}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>${ex.weight}</td>
+                                <td>${ex.reps}</td>
+                                <td>${ex.round}</td>
+                                <td>${session.notes || ''}</td>
+                            </tr>
+                        `;
+                    });
+                }
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `boomer-traning-${new Date().toISOString().split('T')[0]}.xls`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('Excel fil eksporteret! 📗');
+        }
+
+        function importJSON() {
+            const fileInput = document.getElementById('importFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Vælg venligst en fil først');
+                return;
+            }
+
+            if (!confirm('ADVARSEL: Dette vil overskrive alle eksisterende data. Er du sikker?')) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Validate data structure
+                    if (!data.sessions || !Array.isArray(data.sessions)) {
+                        throw new Error('Ugyldig fil format');
+                    }
+                    
+                    // Import data
+                    sessions = data.sessions;
+                    circuits = data.circuits || [];
+                    routines = data.routines || [];
+                    cardioMachines = data.cardioMachines || defaultCardioMachines;
+                    weightExercises = data.weightExercises || defaultWeightExercises;
+                    
+                    // Save to localStorage
+                    localStorage.setItem('sessions', JSON.stringify(sessions));
+                    localStorage.setItem('circuits', JSON.stringify(circuits));
+                    localStorage.setItem('routines', JSON.stringify(routines));
+                    localStorage.setItem('cardioMachines', JSON.stringify(cardioMachines));
+                    localStorage.setItem('weightExercises', JSON.stringify(weightExercises));
+                    
+                    // Refresh UI
+                    updateCardioMachinesDropdown();
+                    updateWeightExercisesLists();
+                    updateRoutineDropdowns();
+                    renderSessions();
+                    renderCircuits();
+                    renderRoutines();
+                    renderSettings();
+                    calculateDataSize();
+                    
+                    alert(`Import succesfuld! 🎉\n${sessions.length} sessioner importeret.`);
+                    fileInput.value = '';
+                } catch (error) {
+                    alert('Fejl ved import: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Service Worker registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZnVuY3Rpb24oZXZlbnQpIHsKICBzZWxmLnNraXBXYWl0aW5nKCk7Cn0pOwoKc2VsZi5hZGRFdmVudExpc3RlbmVyKCdhY3RpdmF0ZScsIGZ1bmN0aW9uKGV2ZW50KSB7CiAgcmV0dXJuIHNlbGYuY2xpZW50cy5jbGFpbSgpOwp9KTsKCnNlbGYuYWRkRXZlbnRMaXN0ZW5lcignZmV0Y2gnLCBmdW5jdGlvbihldmVudCkgewogIGV2ZW50LnJlc3BvbmRXaXRoKGZldGNoKGV2ZW50LnJlcXVlc3QpKTsKfSk7')
+                    .catch(() => {});
+            });
+        }
+    </script>
+</body>
+</html>
